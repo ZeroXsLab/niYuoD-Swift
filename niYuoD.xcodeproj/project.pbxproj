@@ -8,20 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		82BAF1D922148436002C343F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1D822148436002C343F /* AppDelegate.swift */; };
-		82BAF1DB22148436002C343F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1DA22148436002C343F /* ViewController.swift */; };
 		82BAF1DE22148436002C343F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82BAF1DC22148436002C343F /* Main.storyboard */; };
 		82BAF1E02214843B002C343F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82BAF1DF2214843B002C343F /* Assets.xcassets */; };
 		82BAF1E32214843B002C343F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82BAF1E12214843B002C343F /* LaunchScreen.storyboard */; };
+		82BAF1ED22148720002C343F /* HomePageCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1EC22148720002C343F /* HomePageCVC.swift */; };
+		82BAF1EF22148A05002C343F /* UserInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1EE22148A05002C343F /* UserInfoHeader.swift */; };
+		82BAF1F122148DAB002C343F /* TabBarFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1F022148DAB002C343F /* TabBarFooter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		82BAF1D522148436002C343F /* niYuoD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = niYuoD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BAF1D822148436002C343F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		82BAF1DA22148436002C343F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		82BAF1DD22148436002C343F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		82BAF1DF2214843B002C343F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82BAF1E22214843B002C343F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82BAF1E42214843B002C343F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		82BAF1EC22148720002C343F /* HomePageCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageCVC.swift; sourceTree = "<group>"; };
+		82BAF1EE22148A05002C343F /* UserInfoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoHeader.swift; sourceTree = "<group>"; };
+		82BAF1F022148DAB002C343F /* TabBarFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarFooter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,11 +59,13 @@
 			isa = PBXGroup;
 			children = (
 				82BAF1D822148436002C343F /* AppDelegate.swift */,
-				82BAF1DA22148436002C343F /* ViewController.swift */,
 				82BAF1DC22148436002C343F /* Main.storyboard */,
 				82BAF1DF2214843B002C343F /* Assets.xcassets */,
 				82BAF1E12214843B002C343F /* LaunchScreen.storyboard */,
 				82BAF1E42214843B002C343F /* Info.plist */,
+				82BAF1EC22148720002C343F /* HomePageCVC.swift */,
+				82BAF1EE22148A05002C343F /* UserInfoHeader.swift */,
+				82BAF1F022148DAB002C343F /* TabBarFooter.swift */,
 			);
 			path = niYuoD;
 			sourceTree = "<group>";
@@ -135,7 +141,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82BAF1DB22148436002C343F /* ViewController.swift in Sources */,
+				82BAF1F122148DAB002C343F /* TabBarFooter.swift in Sources */,
+				82BAF1ED22148720002C343F /* HomePageCVC.swift in Sources */,
+				82BAF1EF22148A05002C343F /* UserInfoHeader.swift in Sources */,
 				82BAF1D922148436002C343F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
