@@ -12,17 +12,22 @@ private let reuseIdentifier = "ReuseCell"
 let kHeaderId = "UserInfoHeader"
 let kFooterId = "UserInfoFooter"
 
-class HomePageCVC: UICollectionViewController {
+class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let layout = HoverViewFlowLayout.init()
+        collectionView = UICollectionView.init(frame: UIScreen.main.bounds, collectionViewLayout: layout)
+        collectionView.backgroundColor = UIColor.white
+        collectionView.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView.register(TabBarFooter.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: kFooterId)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: kHeaderId)
+        collectionView.register(TabBarFooter.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: kFooterId)
+        self.view.addSubview(collectionView)
         // Do any additional setup after loading the view.
     }
 
@@ -50,7 +55,7 @@ class HomePageCVC: UICollectionViewController {
         case 0:
             return 0
         case 1:
-            return 48
+            return 90
         default:
             return 0
         }
@@ -67,7 +72,7 @@ class HomePageCVC: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // FIXME: hide header and footer in section 1 without taking area
+        
         var view: UICollectionReusableView? = nil
         switch indexPath.section {
         case 0:
@@ -76,42 +81,29 @@ class HomePageCVC: UICollectionViewController {
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: kHeaderId,
                                                                              for: indexPath)
-                let label = UILabel.init()
-                label.backgroundColor = UIColor.gray
-                label.text = "\(indexPath)"
-                header.frame.size = CGSize(width: 20, height: 20)
-                header.addSubview(label)
-                header.isHidden = false
+                header.backgroundColor = UIColor.black
                 view = header
             } else {
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                              withReuseIdentifier: kFooterId,
                                                                              for: indexPath) as! TabBarFooter
                 footer.setLabel(titles: ["Tab One",String.init(format: "\(arc4random())")], tabIndex: 2)
-                footer.isHidden = false
                 view = footer
             }
         default:
             NSLog("In viewForSupplementaryElementOfKind, with indexPath.section = \(indexPath.section)")
-            if kind == UICollectionView.elementKindSectionHeader {
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: kHeaderId,
-                                                                             for: indexPath)
-                header.backgroundColor = UIColor.black
-                header.frame.size = CGSize(width: 0, height: 0)
-                header.isHidden = true
-                view = header
-            } else {
-                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                             withReuseIdentifier: kFooterId,
-                                                                             for: indexPath)
-                footer.backgroundColor = UIColor.red
-                footer.frame.size = CGSize(width: 0, height: 0)
-                footer.isHidden = true
-                view = footer
-            }
         }
         return view!
+    }
+    
+    // UICollectionView FlowLayout Delegate
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 20) : .zero
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 40) : .zero
     }
 
     // MARK: UICollectionViewDelegate
