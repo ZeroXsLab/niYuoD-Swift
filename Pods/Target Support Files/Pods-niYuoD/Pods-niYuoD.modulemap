@@ -1,0 +1,6 @@
+framework module Pods_niYuoD {
+  umbrella header "Pods-niYuoD-umbrella.h"
+
+  export *
+  module * { export * }
+}

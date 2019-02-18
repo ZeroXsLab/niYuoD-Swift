@@ -15,9 +15,13 @@
 		82BAF1EF22148A05002C343F /* UserInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1EE22148A05002C343F /* UserInfoHeader.swift */; };
 		82BAF1F122148DAB002C343F /* TabBarFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1F022148DAB002C343F /* TabBarFooter.swift */; };
 		82F397482216BFC20031BBC3 /* HoverViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F397472216BFC20031BBC3 /* HoverViewFlowLayout.swift */; };
+		84F6205780B08009D6D89836 /* Pods_niYuoD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40624A6A381F6DBA983A69F0 /* Pods_niYuoD.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		28FD60CEB0B29790542DDF31 /* Pods-niYuoD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.release.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.release.xcconfig"; sourceTree = "<group>"; };
+		40624A6A381F6DBA983A69F0 /* Pods_niYuoD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_niYuoD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		55183609D928B990F605F835 /* Pods-niYuoD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.debug.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.debug.xcconfig"; sourceTree = "<group>"; };
 		82BAF1D522148436002C343F /* niYuoD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = niYuoD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BAF1D822148436002C343F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82BAF1DD22148436002C343F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -35,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F6205780B08009D6D89836 /* Pods_niYuoD.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +51,8 @@
 			children = (
 				82BAF1D722148436002C343F /* niYuoD */,
 				82BAF1D622148436002C343F /* Products */,
+				DE01388BA83513F4756D52E8 /* Pods */,
+				C48DA65EFE94578BB8F12E56 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +80,23 @@
 			path = niYuoD;
 			sourceTree = "<group>";
 		};
+		C48DA65EFE94578BB8F12E56 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				40624A6A381F6DBA983A69F0 /* Pods_niYuoD.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DE01388BA83513F4756D52E8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				55183609D928B990F605F835 /* Pods-niYuoD.debug.xcconfig */,
+				28FD60CEB0B29790542DDF31 /* Pods-niYuoD.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -80,9 +104,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 82BAF1E72214843B002C343F /* Build configuration list for PBXNativeTarget "niYuoD" */;
 			buildPhases = (
+				3C771569ED0320AADD3649E9 /* [CP] Check Pods Manifest.lock */,
 				82BAF1D122148436002C343F /* Sources */,
 				82BAF1D222148436002C343F /* Frameworks */,
 				82BAF1D322148436002C343F /* Resources */,
+				BB7ED43E9C7A602067543994 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -138,6 +164,53 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C771569ED0320AADD3649E9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-niYuoD-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BB7ED43E9C7A602067543994 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		82BAF1D122148436002C343F /* Sources */ = {
@@ -292,6 +365,7 @@
 		};
 		82BAF1E82214843B002C343F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55183609D928B990F605F835 /* Pods-niYuoD.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -310,6 +384,7 @@
 		};
 		82BAF1E92214843B002C343F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28FD60CEB0B29790542DDF31 /* Pods-niYuoD.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
