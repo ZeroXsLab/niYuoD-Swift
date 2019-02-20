@@ -13,6 +13,9 @@ let kHeaderId = "UserInfoHeader"
 let kFooterId = "UserInfoFooter"
 
 class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout {
+    
+    let uid: String = "97795069353"
+    var user: User?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,7 +90,9 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                              withReuseIdentifier: kFooterId,
                                                                              for: indexPath) as! TabBarFooter
-                footer.setLabel(titles: ["Tab One",String.init(format: "\(arc4random())")], tabIndex: 2)
+                loadUserData()
+                // FIXME: user is nil when the app run
+                footer.setLabel(titles: ["Aweme " + String(user?.aweme_count ?? 0),String.init(format: "\(arc4random())")], tabIndex: 2)
                 view = footer
             }
         default:
@@ -104,6 +109,16 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 40) : .zero
+    }
+    
+    func loadUserData() {
+        UserRequest.findUser(uid: uid,
+                             success: { [weak self] data in
+            self?.user = data as? User
+        },
+                             failure: { error in
+            print(error.localizedDescription)
+        })
     }
 
     // MARK: UICollectionViewDelegate

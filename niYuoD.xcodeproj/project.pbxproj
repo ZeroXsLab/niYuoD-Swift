@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		828B3B9A221B142B00FFC253 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828B3B99221B142B00FFC253 /* NetworkManager.swift */; };
+		828B3B9C221B15C000FFC253 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828B3B9B221B15C000FFC253 /* BaseRequest.swift */; };
+		828B3B9E221B280800FFC253 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828B3B9D221B280800FFC253 /* User.swift */; };
+		828B3BA0221B299500FFC253 /* UserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828B3B9F221B299500FFC253 /* UserRequest.swift */; };
+		828B3BA2221B2A4400FFC253 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828B3BA1221B2A4400FFC253 /* UserResponse.swift */; };
 		82BAF1D922148436002C343F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1D822148436002C343F /* AppDelegate.swift */; };
 		82BAF1DE22148436002C343F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82BAF1DC22148436002C343F /* Main.storyboard */; };
 		82BAF1E02214843B002C343F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82BAF1DF2214843B002C343F /* Assets.xcassets */; };
@@ -22,6 +27,11 @@
 		28FD60CEB0B29790542DDF31 /* Pods-niYuoD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.release.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.release.xcconfig"; sourceTree = "<group>"; };
 		40624A6A381F6DBA983A69F0 /* Pods_niYuoD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_niYuoD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55183609D928B990F605F835 /* Pods-niYuoD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.debug.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.debug.xcconfig"; sourceTree = "<group>"; };
+		828B3B99221B142B00FFC253 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		828B3B9B221B15C000FFC253 /* BaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
+		828B3B9D221B280800FFC253 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		828B3B9F221B299500FFC253 /* UserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRequest.swift; sourceTree = "<group>"; };
+		828B3BA1221B2A4400FFC253 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		82BAF1D522148436002C343F /* niYuoD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = niYuoD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BAF1D822148436002C343F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82BAF1DD22148436002C343F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -76,6 +86,11 @@
 				82BAF1EE22148A05002C343F /* UserInfoHeader.swift */,
 				82BAF1F022148DAB002C343F /* TabBarFooter.swift */,
 				82F397472216BFC20031BBC3 /* HoverViewFlowLayout.swift */,
+				828B3B99221B142B00FFC253 /* NetworkManager.swift */,
+				828B3B9B221B15C000FFC253 /* BaseRequest.swift */,
+				828B3B9D221B280800FFC253 /* User.swift */,
+				828B3B9F221B299500FFC253 /* UserRequest.swift */,
+				828B3BA1221B2A4400FFC253 /* UserResponse.swift */,
 			);
 			path = niYuoD;
 			sourceTree = "<group>";
@@ -219,8 +234,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				828B3B9A221B142B00FFC253 /* NetworkManager.swift in Sources */,
 				82BAF1F122148DAB002C343F /* TabBarFooter.swift in Sources */,
+				828B3BA0221B299500FFC253 /* UserRequest.swift in Sources */,
 				82BAF1ED22148720002C343F /* HomePageCVC.swift in Sources */,
+				828B3B9C221B15C000FFC253 /* BaseRequest.swift in Sources */,
+				828B3BA2221B2A4400FFC253 /* UserResponse.swift in Sources */,
+				828B3B9E221B280800FFC253 /* User.swift in Sources */,
 				82BAF1EF22148A05002C343F /* UserInfoHeader.swift in Sources */,
 				82BAF1D922148436002C343F /* AppDelegate.swift in Sources */,
 				82F397482216BFC20031BBC3 /* HoverViewFlowLayout.swift in Sources */,
