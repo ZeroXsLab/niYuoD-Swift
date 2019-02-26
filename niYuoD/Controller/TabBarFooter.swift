@@ -28,7 +28,7 @@ class TabBarFooter: UICollectionReusableView {
         }
         labels.removeAll()
         // Clear All
-        labelWidth = UIScreen.main.bounds.width / CGFloat(titles.count)
+        labelWidth = screenWidth / CGFloat(titles.count)
         for index in titles.indices {
             let title = titles[index]
             let label = UILabel.init()

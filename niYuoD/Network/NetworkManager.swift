@@ -12,8 +12,6 @@ import Alamofire
 typealias HttpSuccess = (_ data: Any) -> Void
 typealias HttpFailure = (_ error: Error) -> Void
 
-let BaseUrl: String = "http://116.62.9.17:8080/douyin/"
-
 class NetworkManager: NSObject {
     
     private static let reachabilityManager = { () -> NetworkReachabilityManager in
@@ -32,7 +30,7 @@ class NetworkManager: NSObject {
             success(data)
         } else {
             let message: String = data["message"] as! String
-            let error = NSError.init(domain: "test", code: -1000, userInfo: [NSLocalizedDescriptionKey : message])
+            let error = NSError.init(domain: NetworkDomain, code: -1000, userInfo: [NSLocalizedDescriptionKey : message])
             failure(error)
         }
     }
@@ -59,8 +57,8 @@ class NetworkManager: NSObject {
                         return
                     }
                     let path = response.request?.url?.path
-                    if((path?.contains("user"))!){
-                        success(String.readJSON2DicWithFileName(fileName: "user"))
+                    if((path?.contains(FindUserByUID_URL))!){
+                        success(String.readJSON2DicWithFileName(fileName: FindUserByUID_URL))
                     } else {
                         failure(err)
                     }

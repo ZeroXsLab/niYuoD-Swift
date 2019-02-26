@@ -1,5 +1,5 @@
 //
-//  BaseRequest.swift
+//  UserResponse.swift
 //  niYuoD
 //
 //  Created by Xhandsome on 2019/2/19.
@@ -9,7 +9,8 @@
 import Foundation
 import HandyJSON
 
-class BaseRequest: HandyJSON {
-    required init() {
-    }
+class UserResponse: BaseModel{
+    
+    var data: User?
+    
 }

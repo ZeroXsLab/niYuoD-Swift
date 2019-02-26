@@ -22,7 +22,7 @@ class UserInfoHeader: UICollectionReusableView {
     }
     
     func initData(user: User) {
-        labelWidth = UIScreen.main.bounds.width
+        labelWidth = screenWidth
         nameLabel.text = (user.nickname ?? "") + " Douyin: " + (user.short_id ?? "")
         nameLabel.textAlignment = .center
         nameLabel.frame = CGRect(x: 0,

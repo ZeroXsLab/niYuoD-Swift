@@ -9,9 +9,7 @@
 import Foundation
 import HandyJSON
 
-class User: NSObject,HandyJSON {
-    required override init() {
-    }
+class User: BaseModel {
     
     var weibo_name: String?
     var google_account: String?
@@ -99,35 +97,23 @@ class User: NSObject,HandyJSON {
     
 }
 
-class Avatar: NSObject,HandyJSON {
-    
-    required override init() {
-    }
+class Avatar: BaseModel{
     
     var uri: String?
     var url_list = [String]()
 }
 
-class Video_Icon: NSObject,HandyJSON {
-    
-    required override init() {
-    }
+class Video_Icon: BaseModel {
     
     var uri: String?
     var url_list =  [String]()
 }
 
-class Geofencing: NSObject,HandyJSON {
-    
-    required override init() {
-    }
+class Geofencing: BaseModel {
     
 }
 
-class Activity: NSObject,HandyJSON {
-    
-    required override init() {
-    }
+class Activity: BaseModel {
     
     var digg_count: Int?
     var use_music_count: Int?
