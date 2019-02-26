@@ -28,9 +28,10 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
 
         // Register cell classes
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: kHeaderId)
+        collectionView.register(UserInfoHeader.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: kHeaderId)
         collectionView.register(TabBarFooter.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: kFooterId)
         self.view.addSubview(collectionView)
+        loadUserData()
         // Do any additional setup after loading the view.
     }
 
@@ -83,15 +84,15 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
             if kind == UICollectionView.elementKindSectionHeader {
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: kHeaderId,
-                                                                             for: indexPath)
-                header.backgroundColor = UIColor.black
+                                                                             for: indexPath) as! UserInfoHeader
+                if let data = user {
+                    header.initData(user: data)
+                }
                 view = header
             } else {
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                              withReuseIdentifier: kFooterId,
                                                                              for: indexPath) as! TabBarFooter
-                loadUserData()
-                // FIXME: user is nil when the app run
                 footer.setLabel(titles: ["Aweme " + String(user?.aweme_count ?? 0),String.init(format: "\(arc4random())")], tabIndex: 2)
                 view = footer
             }
@@ -115,6 +116,8 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         UserRequest.findUser(uid: uid,
                              success: { [weak self] data in
             self?.user = data as? User
+                                print("load data successfully!" + (self?.user?.nickname ?? "no value yet..."))
+                                self?.collectionView.reloadSections(IndexSet.init(integer: 0))
         },
                              failure: { error in
             print(error.localizedDescription)
