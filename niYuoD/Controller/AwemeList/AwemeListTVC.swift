@@ -9,6 +9,7 @@
 import UIKit
 
 let kAwemeCell: String = "AwemeListCell"
+var excuteCount: Int = 0
 
 class AwemeListTVC: UITableViewController {
     
@@ -27,12 +28,14 @@ class AwemeListTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: kAwemeCell)
+        tableView.register(AwemeListCell.classForCoder(), forCellReuseIdentifier: kAwemeCell)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1,
                                       execute: {
+                                        if self.currentIndex > 15 {
+                                            self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex - 1, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+                                        }
                                         self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
         })
-        // FIXME: always scroll to (row-1) when the indexPath.row > 15
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -53,15 +56,9 @@ class AwemeListTVC: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: kAwemeCell, for: indexPath)
-        for subview in cell.subviews {
-            subview.removeFromSuperview()
-        }
-        let label: UILabel = UILabel.init()
-        label.text = labelText + " at row \(indexPath.row)"
-        label.frame = CGRect.init(x: 0, y: 0, width: screenWidth - 5.0, height: cell.bounds.height - 5.0)
-        label.backgroundColor = UIColor.gray
-        cell.addSubview(label)
+        let cell = tableView.dequeueReusableCell(withIdentifier: kAwemeCell, for: indexPath) as! AwemeListCell
+        let text: String = labelText + " at row \(indexPath.row)"
+        cell.setLabel(labelText: text)
         return cell
     }
     
