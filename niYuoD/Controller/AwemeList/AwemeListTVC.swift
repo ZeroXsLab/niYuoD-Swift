@@ -13,10 +13,12 @@ let kAwemeCell: String = "AwemeListCell"
 class AwemeListTVC: UITableViewController {
     
     var labelText: String = ""
+    var currentIndex: Int = 0
     
     init(indexPath: IndexPath){
         super.init(nibName: nil, bundle: nil)
         self.labelText = String(describing: indexPath)
+        self.currentIndex = indexPath.row
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -26,6 +28,11 @@ class AwemeListTVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: kAwemeCell)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1,
+                                      execute: {
+                                        self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+        })
+        // FIXME: always scroll to (row-1) when the indexPath.row > 15
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -47,8 +54,11 @@ class AwemeListTVC: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kAwemeCell, for: indexPath)
+        for subview in cell.subviews {
+            subview.removeFromSuperview()
+        }
         let label: UILabel = UILabel.init()
-        label.text = labelText
+        label.text = labelText + " at row \(indexPath.row)"
         label.frame = CGRect.init(x: 0, y: 0, width: screenWidth - 5.0, height: cell.bounds.height - 5.0)
         label.backgroundColor = UIColor.gray
         cell.addSubview(label)
@@ -61,6 +71,32 @@ class AwemeListTVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        DispatchQueue.main.async {
+            let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
+            scrollView.panGestureRecognizer.isEnabled = false
+            if translatedPoint.y < -50 && self.currentIndex < 19 {
+                self.currentIndex += 1
+            }
+            if translatedPoint.y > 50 && self.currentIndex > 0{
+                self.currentIndex -= 1
+            }
+            UIView.animate(withDuration: 0.15,
+                           delay: 0.0,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 5.0,
+                           options: UIView.AnimationOptions.curveEaseOut,
+                           animations: {
+                            self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0),
+                                                       at: UITableView.ScrollPosition.top,
+                                                       animated: false)
+            },
+                           completion: { finished in
+                            scrollView.panGestureRecognizer.isEnabled = true
+            })
+        }
     }
 
     /*
