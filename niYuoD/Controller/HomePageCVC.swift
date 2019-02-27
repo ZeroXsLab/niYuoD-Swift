@@ -16,9 +16,16 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     
     let uid: String = "97795069353"
     var user: User?
+    var pageIndex: Int = 0
+    var workAwemes = [Aweme]()
+    
+    var itemWidth: CGFloat = 0
+    var itemHeight: CGFloat = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        itemWidth = (screenWidth - CGFloat(Int(screenWidth) % 3)) / 3.0 - cellGap
+        itemHeight = itemWidth * 1.3
         let layout = HoverViewFlowLayout.init()
         collectionView = UICollectionView.init(frame: UIScreen.main.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = UIColor.white
@@ -27,11 +34,12 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(AwemeCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.register(UserInfoHeader.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: kHeaderId)
         collectionView.register(TabBarFooter.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: kFooterId)
         self.view.addSubview(collectionView)
         loadUserData()
+        loadData(page: self.pageIndex)
         // Do any additional setup after loading the view.
     }
 
@@ -59,20 +67,21 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         case 0:
             return 0
         case 1:
-            return 90
+            return workAwemes.count
         default:
             return 0
         }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        let label = UILabel.init()
-        label.frame = CGRect(x: 0, y: 0, width: cell.frame.size.width, height: cell.frame.size.height)
-        label.backgroundColor = UIColor.gray
-        label.text = "\(indexPath)"
-        cell.addSubview(label)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! AwemeCollectionViewCell
+        let aweme: Aweme = workAwemes[indexPath.row]
+        cell.initData(aweme: aweme)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize.init(width: itemWidth, height: itemHeight)
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -121,6 +130,28 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         },
                              failure: { error in
             print(error.localizedDescription)
+        })
+    }
+    
+    func loadData(page: Int, _ size: Int = 21) {
+        AwemeListRequest.findPostAwemesPaged(uid: uid,
+                                             page: page,
+                                             success: {[weak self] data in
+                                                if let response = data as? AwemeListResponse {
+                                                    let array = response.data
+                                                    self?.pageIndex += 1
+                                                    self?.collectionView.performBatchUpdates({
+                                                        self?.workAwemes += array
+                                                        var indexPaths = [IndexPath]()
+                                                        for row in ((self?.workAwemes.count ?? 0) - array.count) ..< (self?.workAwemes.count ?? 0) {
+                                                            indexPaths.append(IndexPath.init(row: row, section: 1))
+                                                        }
+                                                        self?.collectionView.insertItems(at: indexPaths)
+                                                    }, completion: nil)
+                                                }
+            },
+                                             failure: { error in
+                                                print(error.localizedDescription)
         })
     }
 

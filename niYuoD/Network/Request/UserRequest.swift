@@ -15,12 +15,15 @@ class UserRequest: BaseRequest {
     static func findUser(uid: String, success: @escaping HttpSuccess, failure: @escaping HttpFailure){
         let request = UserRequest.init()
         request.uid = uid
-        NetworkManager.getRequest(urlPath: FindUserByUID_URL, request: request, success: { (data) in
+        NetworkManager.getRequest(urlPath: FindUserByUID_URL,
+                                  request: request,
+                                  success: { data in
             let response = UserResponse.deserialize(from: data as? [String:Any])
             success(response?.data ?? User.init())
-        }) { (error) in
-            failure(error)
-        }
+        },
+                                  failure: { error in
+                                    failure(error)
+        })
     }
     
 }
