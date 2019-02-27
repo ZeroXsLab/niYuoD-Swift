@@ -8,7 +8,7 @@
 
 import UIKit
 
-private let reuseIdentifier = "ReuseCell"
+private let kAwemeCollectionCell = "AwemeCollectionCell"
 let kHeaderId = "UserInfoHeader"
 let kFooterId = "UserInfoFooter"
 
@@ -34,7 +34,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        collectionView.register(AwemeCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(AwemeCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: kAwemeCollectionCell)
         collectionView.register(UserInfoHeader.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: kHeaderId)
         collectionView.register(TabBarFooter.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: kFooterId)
         self.view.addSubview(collectionView)
@@ -74,7 +74,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! AwemeCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kAwemeCollectionCell, for: indexPath) as! AwemeCollectionViewCell
         let aweme: Aweme = workAwemes[indexPath.row]
         cell.initData(aweme: aweme)
         return cell
@@ -109,6 +109,11 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
             NSLog("In viewForSupplementaryElementOfKind, with indexPath.section = \(indexPath.section)")
         }
         return view!
+    }
+    // UICollectionView Action
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = AwemeListTVC.init(indexPath: indexPath)
+        self.present(controller, animated: true, completion: nil)
     }
     
     // UICollectionView FlowLayout Delegate

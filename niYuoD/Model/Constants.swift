@@ -16,4 +16,5 @@ let FindUserByUID_URL: String = "user"
 let FindAwemePostByPageURL: String = "aweme/post"
 
 let screenWidth = UIScreen.main.bounds.width
+let screenHeight = UIScreen.main.bounds.height
 let cellGap: CGFloat = 9.0
