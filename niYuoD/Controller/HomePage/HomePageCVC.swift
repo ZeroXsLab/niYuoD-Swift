@@ -113,6 +113,9 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     // UICollectionView Action
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let controller = AwemeListTVC.init(indexPath: indexPath)
+        let edgePanRecognizer: UIScreenEdgePanGestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgePanHandler(recognizer:)))
+        edgePanRecognizer.edges = .left
+        controller.view.addGestureRecognizer(edgePanRecognizer)
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -158,6 +161,21 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                                              failure: { error in
                                                 print(error.localizedDescription)
         })
+    }
+
+    @objc func edgePanHandler(recognizer: UIScreenEdgePanGestureRecognizer){
+        switch recognizer.state {
+        case .changed:
+            fallthrough
+        case .ended:
+            let translation = recognizer.translation(in: recognizer.view?.superview)
+            if translation.x > 50 {
+                dismiss(animated: true, completion: nil)
+            }
+            break
+        default:
+            break
+        }
     }
 
     // MARK: UICollectionViewDelegate

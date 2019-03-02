@@ -66,10 +66,6 @@ class AwemeListTVC: UITableViewController {
         return screenHeight
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         DispatchQueue.main.async {
             let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
@@ -94,6 +90,10 @@ class AwemeListTVC: UITableViewController {
                             scrollView.panGestureRecognizer.isEnabled = true
             })
         }
+    }
+    
+    override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        currentIndex = 0
     }
 
     /*
