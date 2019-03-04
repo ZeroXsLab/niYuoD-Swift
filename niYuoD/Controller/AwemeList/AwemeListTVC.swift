@@ -9,17 +9,24 @@
 import UIKit
 
 let kAwemeCell: String = "AwemeListCell"
-var excuteCount: Int = 0
 
 class AwemeListTVC: UITableViewController {
     
-    var labelText: String = ""
     var currentIndex: Int = 0
+    var pageIndex: Int = 0
+    var pageSize: Int = 21
+    var uid: String?
+    var awemes = [Aweme]()
+    var data = [Aweme]()
     
-    init(indexPath: IndexPath){
+    init(data: [Aweme], currentIndex: Int, page: Int, size: Int, uid: String){
         super.init(nibName: nil, bundle: nil)
-        self.labelText = String(describing: indexPath)
-        self.currentIndex = indexPath.row
+        self.currentIndex = currentIndex
+        self.pageIndex = page
+        self.pageSize = size
+        self.uid = uid
+        self.awemes = data
+        self.data.append(data[currentIndex])
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,12 +36,17 @@ class AwemeListTVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(AwemeListCell.classForCoder(), forCellReuseIdentifier: kAwemeCell)
+        loadData(page: pageIndex)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1,
                                       execute: {
+                                        self.data = self.awemes
+                                        self.tableView.reloadData()
                                         if self.currentIndex > 15 {
-                                            self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex - 1, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+                                            self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex - 1, section: 0), at: UITableView.ScrollPosition.top, animated: false)
                                         }
                                         self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+                                        let cell = self.tableView.cellForRow(at: IndexPath.init(row: self.currentIndex, section: 0)) as! AwemeListCell
+                                        cell.playerView.play()
         })
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -49,16 +61,21 @@ class AwemeListTVC: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        let cell = self.tableView.cellForRow(at: IndexPath.init(row: self.currentIndex, section: 0)) as! AwemeListCell
+        cell.playerView.pause()
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 20
+        return data.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kAwemeCell, for: indexPath) as! AwemeListCell
-        let text: String = labelText + " at row \(indexPath.row)"
-        cell.setLabel(labelText: text)
+        cell.initData(aweme: data[indexPath.row])
         return cell
     }
     
@@ -94,6 +111,29 @@ class AwemeListTVC: UITableViewController {
     
     override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
         currentIndex = 0
+    }
+    
+    func loadData(page: Int, _ size: Int = 21){
+        AwemeListRequest.findPostAwemesPaged(uid: uid ?? "",
+                                             page: page,
+                                             size,
+                                             success: {[weak self] data in
+                                                if let response = data as? AwemeListResponse {
+                                                    let dataArray = response.data
+                                                    self?.pageIndex += 1
+                                                    self?.tableView.beginUpdates()
+                                                    self?.data += dataArray
+                                                    var indexPaths = [IndexPath]()
+                                                    for row in ((self?.data.count ?? 0) - dataArray.count) ..< (self?.data.count ?? 0) {
+                                                        indexPaths.append(IndexPath.init(row: row, section: 0))
+                                                    }
+                                                    self?.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
+                                                    self?.tableView.endUpdates()
+                                                }
+            },
+                                             failure: { error in
+                                                print("AwemeListTVC loadData: " + error.localizedDescription)
+        })
     }
 
     /*

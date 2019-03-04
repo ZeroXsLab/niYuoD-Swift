@@ -17,6 +17,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     let uid: String = "97795069353"
     var user: User?
     var pageIndex: Int = 0
+    var pageSize: Int = 21
     var workAwemes = [Aweme]()
     
     var itemWidth: CGFloat = 0
@@ -112,7 +113,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     }
     // UICollectionView Action
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let controller = AwemeListTVC.init(indexPath: indexPath)
+        let controller = AwemeListTVC.init(data: workAwemes, currentIndex: indexPath.row, page: pageIndex, size: pageSize, uid: uid)
         let edgePanRecognizer: UIScreenEdgePanGestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgePanHandler(recognizer:)))
         edgePanRecognizer.edges = .left
         controller.view.addGestureRecognizer(edgePanRecognizer)
@@ -137,7 +138,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                                 self?.collectionView.reloadSections(IndexSet.init(integer: 0))
         },
                              failure: { error in
-            print(error.localizedDescription)
+                                print("HomePage load user data: " + error.localizedDescription)
         })
     }
     
@@ -159,7 +160,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                                                 }
             },
                                              failure: { error in
-                                                print(error.localizedDescription)
+                                                print("HomePage load data: " + error.localizedDescription)
         })
     }
 

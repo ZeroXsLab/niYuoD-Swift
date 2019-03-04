@@ -17,4 +17,6 @@ let FindAwemePostByPageURL: String = "aweme/post"
 
 let screenWidth = UIScreen.main.bounds.width
 let screenHeight = UIScreen.main.bounds.height
+let screenFrame = UIScreen.main.bounds
+let statusBarHeight = UIApplication.shared.statusBarFrame.height
 let cellGap: CGFloat = 9.0

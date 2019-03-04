@@ -10,7 +10,9 @@ import UIKit
 
 class AwemeListCell: UITableViewCell {
     
-    var label: UILabel = UILabel.init()
+    var aweme: Aweme?
+    
+    var playerView: AVPlayerView = AVPlayerView.init()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -19,22 +21,33 @@ class AwemeListCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        if let _ = self.playerView.player {
+            if self.playerView.playStatus {
+                self.playerView.pause()
+            } else {
+                self.playerView.play()
+            }
+        }
         // Configure the view for the selected state
     }
     
-    func setLabel(labelText: String) {
-        for subview in self.subviews {
-            subview.removeFromSuperview()
-        }
-        label.text = labelText
-        label.backgroundColor = UIColor.gray
-        self.addSubview(label)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        initSubViews()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        label.frame = CGRect.init(x: 0, y: 0, width: screenWidth - 5.0, height: self.bounds.height - 5.0)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initSubViews() {
+        self.contentView.addSubview(playerView)
+    }
+    
+    func initData(aweme: Aweme) {
+        self.aweme = aweme
+        playerView.setPlayerSourceUrl(urlString: aweme.video?.play_addr?.url_list.first ?? "")
+//        playerView.play()
     }
 
 }
