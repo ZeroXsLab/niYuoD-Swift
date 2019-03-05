@@ -13,6 +13,7 @@ class AwemeListCell: UITableViewCell {
     var aweme: Aweme?
     
     var playerView: AVPlayerView = AVPlayerView.init()
+    var descLabel: UILabel = UILabel.init()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -41,13 +42,28 @@ class AwemeListCell: UITableViewCell {
     }
     
     func initSubViews() {
+        self.contentView.backgroundColor = UIColor.gray
         self.contentView.addSubview(playerView)
+        descLabel.text = ""
+        descLabel.textColor = UIColor.white
+        self.contentView.addSubview(descLabel)
     }
     
     func initData(aweme: Aweme) {
         self.aweme = aweme
         playerView.setPlayerSourceUrl(urlString: aweme.video?.play_addr?.url_list.first ?? "")
-//        playerView.play()
+        descLabel.text = aweme.desc ?? "Description:"
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.playerView.cancelLoading()
+        self.descLabel.text = ""
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        descLabel.frame = CGRect.init(x: 10, y: self.bounds.size.height - 20, width: self.bounds.size.width - 20, height: 12)
     }
 
 }

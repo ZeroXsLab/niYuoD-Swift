@@ -42,8 +42,6 @@ class AwemeListTVC: UITableViewController {
                                         self.data = self.awemes
                                         self.tableView.reloadData()
                                         self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
-                                        let cell = self.tableView.cellForRow(at: IndexPath.init(row: self.currentIndex, section: 0)) as! AwemeListCell
-                                        cell.playerView.play()
         })
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -65,8 +63,10 @@ class AwemeListTVC: UITableViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        let cell = self.tableView.cellForRow(at: IndexPath.init(row: self.currentIndex, section: 0)) as! AwemeListCell
-        cell.playerView.pause()
+        let cells = self.tableView.visibleCells as! [AwemeListCell]
+        for cell in cells {
+            cell.playerView.cancelLoading()
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

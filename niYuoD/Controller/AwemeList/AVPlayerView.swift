@@ -23,6 +23,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     var response: HTTPURLResponse?
     var pendingRequests = [AVAssetResourceLoadingRequest]()
     var task: URLSessionDataTask?
+    var cancelLoadingQueue: DispatchQueue?
     var playStatus: Bool = false
 
     init() {
@@ -44,6 +45,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         playerLayer = AVPlayerLayer.init(player: player)
         playerLayer.videoGravity = .resizeAspectFill
         self.layer.addSublayer(self.playerLayer)
+        cancelLoadingQueue = DispatchQueue.init(label: "com.start.cancelloadingqueue")
     }
     
     override func layoutSubviews() {
@@ -71,7 +73,35 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         }
     }
     
+    func cancelLoading() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        playerLayer.isHidden = true
+        CATransaction.commit()
+        pause()
+        player = nil
+        playerItem = nil
+        playerLayer.player = nil
+        cancelLoadingQueue?.async { [weak self] in
+            self?.urlAsset?.cancelLoading()
+            self?.task?.cancel()
+            self?.task = nil
+            self?.data = nil
+            self?.response = nil
+            for loadingRequest in self?.pendingRequests ?? [] {
+                if !loadingRequest.isFinished {
+                    loadingRequest.finishLoading()
+                }
+            }
+            self?.pendingRequests.removeAll()
+        }
+    }
+    
     func play() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        playerLayer.isHidden = false
+        CATransaction.commit()
         AVPlayerManager.shared().play(player: player!)
         playStatus = true
     }
