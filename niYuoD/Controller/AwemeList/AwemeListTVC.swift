@@ -41,9 +41,6 @@ class AwemeListTVC: UITableViewController {
                                       execute: {
                                         self.data = self.awemes
                                         self.tableView.reloadData()
-                                        if self.currentIndex > 15 {
-                                            self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex - 1, section: 0), at: UITableView.ScrollPosition.top, animated: false)
-                                        }
                                         self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
                                         let cell = self.tableView.cellForRow(at: IndexPath.init(row: self.currentIndex, section: 0)) as! AwemeListCell
                                         cell.playerView.play()
@@ -53,6 +50,10 @@ class AwemeListTVC: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 
     // MARK: - Table view data source
