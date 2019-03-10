@@ -54,7 +54,6 @@ class AwemeCollectionViewCell: UICollectionViewCell {
             DispatchQueue.main.async {
                 if let imageData = urlContents {
                     self.imageView.image = UIImage(data: imageData)
-//                    NSLog("url:\(urlString)\n and \(String(describing: self.url))")
                 }
             }
         }

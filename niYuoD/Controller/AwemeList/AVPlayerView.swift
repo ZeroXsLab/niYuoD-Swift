@@ -10,6 +10,10 @@ import UIKit
 import AVFoundation
 import MobileCoreServices
 
+protocol AVPlayerUpdateDelegate: NSObjectProtocol {
+    func onPlayItemStatusUpdate(status: AVPlayerItem.Status)
+}
+
 class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, URLSessionDataDelegate, URLSessionTaskDelegate {
     
     var session: URLSession?
@@ -24,7 +28,8 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     var pendingRequests = [AVAssetResourceLoadingRequest]()
     var task: URLSessionDataTask?
     var cancelLoadingQueue: DispatchQueue?
-    var playStatus: Bool = false
+    var hasRetry: Bool = false
+    var delegate: AVPlayerUpdateDelegate?
 
     init() {
         super.init(frame: screenFrame)
@@ -60,15 +65,22 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         sourceURL = URL.init(string: urlString)
         var components = URLComponents.init(url: sourceURL!, resolvingAgainstBaseURL: false)
         sourceScheme = components?.scheme
-        components?.scheme = "streaming"
-        sourceURL = components?.url
-        if sourceURL != nil {
-            urlAsset = AVURLAsset.init(url: sourceURL!)
-            urlAsset?.resourceLoader.setDelegate(self, queue: DispatchQueue.main)
-            if urlAsset != nil {
-                playerItem = AVPlayerItem.init(asset: urlAsset!)
-                player = AVPlayer.init(playerItem: playerItem)
-                playerLayer.player = player
+        DispatchQueue.main.async { [weak self] in
+            components?.scheme = "streaming"
+            self?.sourceURL = components?.url
+            if let url = self?.sourceURL {
+                self?.urlAsset = AVURLAsset.init(url: url)
+                self?.urlAsset?.resourceLoader.setDelegate(self, queue: DispatchQueue.main)
+                if let asset = self?.urlAsset {
+                    let assetKeys = [
+                        "playable",
+                        "hasProtectedContent"
+                    ]
+                    self?.playerItem = AVPlayerItem.init(asset: asset, automaticallyLoadedAssetKeys: assetKeys)
+                    self?.playerItem?.addObserver(self!, forKeyPath: "status", options: [.initial, .new], context: nil)
+                    self?.player = AVPlayer.init(playerItem: self?.playerItem)
+                    self?.playerLayer.player = self?.player
+                }
             }
         }
     }
@@ -78,6 +90,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         CATransaction.setDisableActions(true)
         playerLayer.isHidden = true
         CATransaction.commit()
+        playerItem?.removeObserver(self, forKeyPath: "status")
         pause()
         player = nil
         playerItem = nil
@@ -98,17 +111,19 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     }
     
     func play() {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        playerLayer.isHidden = false
-        CATransaction.commit()
         AVPlayerManager.shared().play(player: player!)
-        playStatus = true
     }
     
     func pause() {
         AVPlayerManager.shared().pause(player: player!)
-        playStatus = false
+    }
+    
+    func replay() {
+        AVPlayerManager.shared().replay(player: player!)
+    }
+    
+    deinit {
+        playerItem?.removeObserver(self, forKeyPath: "status")
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
@@ -127,6 +142,16 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         self.data?.append(data)
         self.processPendingRequests()
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        if error != nil {
+            NSLog("AVPlayer resouce download error \(error!.localizedDescription)")
+        }
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
+        completionHandler(nil)
     }
     
     func processPendingRequests() {
@@ -172,7 +197,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         if task == nil {
             if var url = loadingRequest.request.url {
                 var components = URLComponents.init(url: url, resolvingAgainstBaseURL: false)
-                components?.scheme = sourceScheme ?? "http"
+                components?.scheme = sourceScheme ?? "https"
                 url = components?.url ?? url
                 let request = URLRequest.init(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringCacheData, timeoutInterval: 60)
                 task = session?.dataTask(with: request)
@@ -186,6 +211,35 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
         if let index = pendingRequests.firstIndex(of: loadingRequest) {
             pendingRequests.remove(at: index)
+        }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "status" {
+            let status = playerItem?.status ?? AVPlayerItem.Status.unknown
+            switch status {
+            case .readyToPlay:
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
+                playerLayer.isHidden = false
+                CATransaction.commit()
+                play()
+            case .unknown:
+                break
+            case .failed:
+                if !hasRetry {
+                    cancelLoading()
+                    var url = sourceURL ?? URL.init(string: "")!
+                    var components = URLComponents.init(url: url, resolvingAgainstBaseURL: false)
+                    components?.scheme = sourceScheme ?? "https"
+                    url = components?.url ?? url
+                    setPlayerSourceUrl(urlString: url.absoluteString)
+                    hasRetry = true
+                }
+            }
+            delegate?.onPlayItemStatusUpdate(status: playerItem?.status ?? AVPlayerItem.Status.unknown)
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
 

@@ -24,6 +24,8 @@
 		82BAF1ED22148720002C343F /* HomePageCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1EC22148720002C343F /* HomePageCVC.swift */; };
 		82BAF1EF22148A05002C343F /* UserInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1EE22148A05002C343F /* UserInfoHeader.swift */; };
 		82BAF1F122148DAB002C343F /* TabBarFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BAF1F022148DAB002C343F /* TabBarFooter.swift */; };
+		82BDB1752232557A0091F88D /* user.json in Resources */ = {isa = PBXBuildFile; fileRef = 82BDB1742232557A0091F88D /* user.json */; };
+		82BDB1BD223257370091F88D /* awemes.json in Resources */ = {isa = PBXBuildFile; fileRef = 82BDB1BC223257370091F88D /* awemes.json */; };
 		82EBECAB22252A8F00DB92CD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EBECAA22252A8F00DB92CD /* Constants.swift */; };
 		82EBECAD22252C1100DB92CD /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EBECAC22252C1100DB92CD /* BaseModel.swift */; };
 		82EBECB122253ADD00DB92CD /* AwemeListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EBECB022253ADD00DB92CD /* AwemeListRequest.swift */; };
@@ -59,6 +61,8 @@
 		82BAF1EC22148720002C343F /* HomePageCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageCVC.swift; sourceTree = "<group>"; };
 		82BAF1EE22148A05002C343F /* UserInfoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoHeader.swift; sourceTree = "<group>"; };
 		82BAF1F022148DAB002C343F /* TabBarFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarFooter.swift; sourceTree = "<group>"; };
+		82BDB1742232557A0091F88D /* user.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = user.json; sourceTree = "<group>"; };
+		82BDB1BC223257370091F88D /* awemes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awemes.json; sourceTree = "<group>"; };
 		82EBECAA22252A8F00DB92CD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		82EBECAC22252C1100DB92CD /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		82EBECB022253ADD00DB92CD /* AwemeListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwemeListRequest.swift; sourceTree = "<group>"; };
@@ -134,6 +138,8 @@
 				82BAF1DF2214843B002C343F /* Assets.xcassets */,
 				82BAF1E12214843B002C343F /* LaunchScreen.storyboard */,
 				82BAF1E42214843B002C343F /* Info.plist */,
+				82BDB1BC223257370091F88D /* awemes.json */,
+				82BDB1742232557A0091F88D /* user.json */,
 			);
 			path = niYuoD;
 			sourceTree = "<group>";
@@ -267,6 +273,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82BDB1752232557A0091F88D /* user.json in Resources */,
+				82BDB1BD223257370091F88D /* awemes.json in Resources */,
 				82BAF1E32214843B002C343F /* LaunchScreen.storyboard in Resources */,
 				82BAF1E02214843B002C343F /* Assets.xcassets in Resources */,
 				82BAF1DE22148436002C343F /* Main.storyboard in Resources */,

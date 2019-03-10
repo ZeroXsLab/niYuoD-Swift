@@ -12,12 +12,14 @@ let kAwemeCell: String = "AwemeListCell"
 
 class AwemeListTVC: UITableViewController {
     
-    var currentIndex: Int = 0
+    @objc dynamic var currentIndex: Int = 0
     var pageIndex: Int = 0
     var pageSize: Int = 21
     var uid: String?
     var awemes = [Aweme]()
     var data = [Aweme]()
+    
+    var isCurPlayerPause: Bool = false
     
     init(data: [Aweme], currentIndex: Int, page: Int, size: Int, uid: String){
         super.init(nibName: nil, bundle: nil)
@@ -35,13 +37,17 @@ class AwemeListTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.register(AwemeListCell.classForCoder(), forCellReuseIdentifier: kAwemeCell)
         loadData(page: pageIndex)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1,
                                       execute: {
                                         self.data = self.awemes
                                         self.tableView.reloadData()
-                                        self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+                                        let currentIndexPath = IndexPath.init(row: self.currentIndex, section: 0)
+                                        self.tableView.scrollToRow(at: currentIndexPath, at: UITableView.ScrollPosition.middle, animated: false)
+                                        self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
         })
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -67,6 +73,7 @@ class AwemeListTVC: UITableViewController {
         for cell in cells {
             cell.playerView.cancelLoading()
         }
+        self.removeObserver(self, forKeyPath: "currentIndex")
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -88,7 +95,7 @@ class AwemeListTVC: UITableViewController {
         DispatchQueue.main.async {
             let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
             scrollView.panGestureRecognizer.isEnabled = false
-            if translatedPoint.y < -50 && self.currentIndex < 19 {
+            if translatedPoint.y < -50 && self.currentIndex < self.data.count - 1 {
                 self.currentIndex += 1
             }
             if translatedPoint.y > 50 && self.currentIndex > 0{
@@ -135,6 +142,27 @@ class AwemeListTVC: UITableViewController {
                                              failure: { error in
                                                 print("AwemeListTVC loadData: " + error.localizedDescription)
         })
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "currentIndex" {
+            isCurPlayerPause = false
+            weak var cell = tableView.cellForRow(at: IndexPath.init(row: currentIndex, section: 0)) as? AwemeListCell
+            if cell?.isPlayerReady ?? false {
+                cell?.replay()
+            } else {
+                AVPlayerManager.shared().pauseAll()
+                cell?.onPlayerReady = {[weak self] in
+                    if let indexPath = self?.tableView.indexPath(for: cell!) {
+                        if !(self?.isCurPlayerPause ?? true) && indexPath.row == self?.currentIndex {
+                            cell?.play()
+                        }
+                    }
+                }
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
     }
 
     /*

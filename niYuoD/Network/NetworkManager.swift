@@ -58,7 +58,9 @@ class NetworkManager: NSObject {
                     }
                     let path = response.request?.url?.path
                     if((path?.contains(FindUserByUID_URL))!){
-                        success(String.readJSON2DicWithFileName(fileName: FindUserByUID_URL))
+                        success(String.readJSON2DicWithFileName(fileName: "user"))
+                    }else if((path?.contains(FindAwemePostByPageURL))!){
+                        success(String.readJSON2DicWithFileName(fileName: "awemes"))
                     } else {
                         failure(err)
                     }

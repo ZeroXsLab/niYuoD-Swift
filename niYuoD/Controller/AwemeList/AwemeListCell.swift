@@ -7,29 +7,22 @@
 //
 
 import UIKit
+import AVFoundation
 
-class AwemeListCell: UITableViewCell {
+typealias OnPlayerReady = () -> Void
+
+class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
     
     var aweme: Aweme?
     
     var playerView: AVPlayerView = AVPlayerView.init()
     var descLabel: UILabel = UILabel.init()
+    var isPlayerReady: Bool = false
+    var onPlayerReady: OnPlayerReady?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        if let _ = self.playerView.player {
-            if self.playerView.playStatus {
-                self.playerView.pause()
-            } else {
-                self.playerView.play()
-            }
-        }
-        // Configure the view for the selected state
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -42,6 +35,7 @@ class AwemeListCell: UITableViewCell {
     }
     
     func initSubViews() {
+        playerView.delegate = self
         self.contentView.backgroundColor = UIColor.gray
         self.contentView.addSubview(playerView)
         descLabel.text = ""
@@ -57,13 +51,37 @@ class AwemeListCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.playerView.cancelLoading()
-        self.descLabel.text = ""
+        playerView.cancelLoading()
+        descLabel.text = ""
+        isPlayerReady = false
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         descLabel.frame = CGRect.init(x: 10, y: self.bounds.size.height - 20, width: self.bounds.size.width - 20, height: 12)
+    }
+    
+    func play() {
+        playerView.play()
+    }
+    
+    func pause() {
+        playerView.pause()
+    }
+    
+    func replay() {
+        playerView.replay()
+    }
+    
+    func onPlayItemStatusUpdate(status: AVPlayerItem.Status) {
+        switch status {
+        case .readyToPlay:
+            isPlayerReady = true
+            onPlayerReady?()
+            break
+        default:
+            break
+        }
     }
 
 }
