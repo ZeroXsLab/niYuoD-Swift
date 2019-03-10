@@ -122,6 +122,14 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         AVPlayerManager.shared().replay(player: player!)
     }
     
+    func updatePlayerState(){
+        if player?.rate == 0 {
+            play()
+        } else {
+            pause()
+        }
+    }
+    
     deinit {
         playerItem?.removeObserver(self, forKeyPath: "status")
     }

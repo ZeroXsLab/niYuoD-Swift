@@ -14,11 +14,12 @@ typealias OnPlayerReady = () -> Void
 class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
     
     var aweme: Aweme?
-    
+    var container: UIView = UIView.init()
     var playerView: AVPlayerView = AVPlayerView.init()
     var descLabel: UILabel = UILabel.init()
     var isPlayerReady: Bool = false
     var onPlayerReady: OnPlayerReady?
+    var singleTapGesture: UITapGestureRecognizer?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,9 +39,12 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
         playerView.delegate = self
         self.contentView.backgroundColor = UIColor.gray
         self.contentView.addSubview(playerView)
+        self.contentView.addSubview(container)
+        singleTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(singleTapAction(sender:)))
+        container.addGestureRecognizer(singleTapGesture!)
         descLabel.text = ""
         descLabel.textColor = UIColor.white
-        self.contentView.addSubview(descLabel)
+        container.addSubview(descLabel)
     }
     
     func initData(aweme: Aweme) {
@@ -58,6 +62,7 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        container.frame = self.bounds
         descLabel.frame = CGRect.init(x: 10, y: self.bounds.size.height - 20, width: self.bounds.size.width - 20, height: 12)
     }
     
@@ -82,6 +87,10 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
         default:
             break
         }
+    }
+    
+    @objc func singleTapAction(sender: UITapGestureRecognizer){
+        playerView.updatePlayerState()
     }
 
 }
