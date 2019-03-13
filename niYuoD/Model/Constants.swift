@@ -20,3 +20,9 @@ let screenHeight = UIScreen.main.bounds.height
 let screenFrame = UIScreen.main.bounds
 let statusBarHeight = UIApplication.shared.statusBarFrame.height
 let cellGap: CGFloat = 9.0
+
+let safeAreaTopHeight: CGFloat = 64
+
+let bigFont: UIFont = UIFont.systemFont(ofSize: 26.0)
+let midFont: UIFont = UIFont.systemFont(ofSize: 14.0)
+let smallFont: UIFont = UIFont.systemFont(ofSize: 10.0)

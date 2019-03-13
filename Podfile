@@ -3,4 +3,5 @@ use_frameworks!
 target 'niYuoD' do
    pod 'Alamofire','~>4.7'
    pod 'HandyJSON'
+   pod 'SnapKit'
 end

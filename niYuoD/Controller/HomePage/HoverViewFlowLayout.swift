@@ -10,8 +10,11 @@ import UIKit
 
 class HoverViewFlowLayout: UICollectionViewFlowLayout {
     
-    override init() {
+    var naviHeight: CGFloat = 0
+    
+    init(naviHeight: CGFloat) {
         super.init()
+        self.naviHeight = naviHeight
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,6 +42,26 @@ class HoverViewFlowLayout: UICollectionViewFlowLayout {
         if let footer = super.layoutAttributesForSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                    at: IndexPath.init(item: 0, section: 0)){
             superArray.append(footer)
+        }
+        for attributes in superArray {
+            if attributes.indexPath.section == 0 {
+                if attributes.representedElementKind == UICollectionView.elementKindSectionHeader {
+                    var rect = attributes.frame
+                    if (self.collectionView?.contentOffset.y)! + self.naviHeight - rect.size.height > rect.origin.y {
+                        rect.origin.y = (self.collectionView?.contentOffset.y)! + self.naviHeight - rect.size.height
+                        attributes.frame = rect
+                    }
+                    attributes.zIndex = 5
+                }
+                if attributes.representedElementKind == UICollectionView.elementKindSectionFooter {
+                    var rect = attributes.frame
+                    if (self.collectionView?.contentOffset.y)! + self.naviHeight > rect.origin.y {
+                        rect.origin.y = (self.collectionView?.contentOffset.y)! + self.naviHeight
+                        attributes.frame = rect
+                    }
+                    attributes.zIndex = 10
+                }
+            }
         }
         return superArray
     }

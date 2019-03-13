@@ -27,9 +27,10 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         super.viewDidLoad()
         itemWidth = (screenWidth - CGFloat(Int(screenWidth) % 3)) / 3.0 - cellGap
         itemHeight = itemWidth * 1.3
-        let layout = HoverViewFlowLayout.init()
+        let layout = HoverViewFlowLayout.init(naviHeight: safeAreaTopHeight)
         collectionView = UICollectionView.init(frame: UIScreen.main.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = UIColor.white
+        collectionView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         collectionView.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -103,7 +104,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                              withReuseIdentifier: kFooterId,
                                                                              for: indexPath) as! TabBarFooter
-                footer.setLabel(titles: ["Aweme " + String(user?.aweme_count ?? 0),String.init(format: "\(arc4random())")], tabIndex: 2)
+                footer.setLabel(titles: ["作品 " + String(user?.aweme_count ?? 0),"LIKE"], tabIndex: 0)
                 view = footer
             }
         default:
@@ -123,7 +124,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     // UICollectionView FlowLayout Delegate
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 20) : .zero
+        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 340 + statusBarHeight) : .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
