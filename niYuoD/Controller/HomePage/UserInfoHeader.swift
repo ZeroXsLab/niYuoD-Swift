@@ -18,7 +18,6 @@ class UserInfoHeader: UICollectionReusableView {
     
     var nickName: UILabel = UILabel.init()
     var douyinNum: UILabel = UILabel.init()
-    var github: UIButton = UIButton.init()
     var brief: UILabel = UILabel.init()
     var genderIcon: UIImageView = UIImageView.init(image: UIImage.init(named: "iconUserProfileBoy"))
     var constellation: UITextView = UITextView.init()
@@ -26,11 +25,17 @@ class UserInfoHeader: UICollectionReusableView {
     var followNum: UILabel = UILabel.init()
     var followedNum: UILabel = UILabel.init()
     
+    var naviContainer: UIView = UIView.init()
+    var naviLabel: UILabel = UILabel.init()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initAvatarBackground()
         container.frame = self.bounds
+        naviContainer.frame = self.bounds
         self.addSubview(container)
+        self.addSubview(naviContainer)
+        naviContainer.alpha = 0
         initAvatar()
         initInfoView()
     }
@@ -81,6 +86,16 @@ class UserInfoHeader: UICollectionReusableView {
             make.right.equalTo(self).inset(40)
         })
         
+        naviLabel.text = "Name"
+        naviLabel.textAlignment = .center
+        naviLabel.font = bigFont
+        naviLabel.textColor = UIColor.white
+        naviContainer.addSubview(naviLabel)
+        naviLabel.snp.makeConstraints({ make in
+            make.bottom.equalTo(self).inset(10)
+            make.left.right.equalTo(self).inset(15)
+        })
+        
         douyinNum.text = "Douyin Number:"
         douyinNum.font = smallFont
         douyinNum.textColor = UIColor.white
@@ -88,16 +103,6 @@ class UserInfoHeader: UICollectionReusableView {
         douyinNum.snp.makeConstraints({ make in
             make.top.equalTo(self.nickName.snp.bottom).offset(3)
             make.left.right.equalTo(self.nickName)
-        })
-        
-        github.setTitle("Github", for: UIControl.State.normal)
-        github.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        github.titleLabel?.font = smallFont
-        container.addSubview(github)
-        github.snp.makeConstraints({ make in
-            make.centerY.equalTo(self.douyinNum)
-            make.right.equalTo(self.douyinNum).inset(5)
-            make.width.equalTo(92)
         })
         
         let splitLine = UIView.init()
@@ -145,7 +150,7 @@ class UserInfoHeader: UICollectionReusableView {
             make.top.height.equalTo(self.genderIcon)
         })
         
-        likeNum.text = "Liked by 0 user"
+        likeNum.text = "0 获赞"
         likeNum.textColor = UIColor.white
         likeNum.font = midFont
         container.addSubview(likeNum)
@@ -154,7 +159,7 @@ class UserInfoHeader: UICollectionReusableView {
             make.left.equalTo(self.avatar)
         })
         
-        followNum.text = "0 Following"
+        followNum.text = "0 关注"
         followNum.textColor = UIColor.white
         followNum.font = midFont
         container.addSubview(followNum)
@@ -163,7 +168,7 @@ class UserInfoHeader: UICollectionReusableView {
             make.left.equalTo(self.likeNum.snp.right).offset(30)
         })
         
-        followedNum.text = "Be followed by 0 user"
+        followedNum.text = "0 粉丝"
         followedNum.textColor = UIColor.white
         followedNum.font = midFont
         container.addSubview(followedNum)
@@ -194,15 +199,31 @@ class UserInfoHeader: UICollectionReusableView {
             }
         }
         nickName.text = user.nickname
+        naviLabel.text = user.nickname
         douyinNum.text = "抖音号: " + (user.short_id ?? "")
         if user.signature != "" {
             brief.text = user.signature
         }
         genderIcon.image = UIImage.init(named: user.gender == 0 ? "iconUserProfileBoy" : "iconUserProfileGirl")
         constellation.text = constellations[user.constellation ?? 0]
-        likeNum.text = String.init(user.total_favorited ?? 0) + "获赞"
-        followNum.text = String.init(user.following_count ?? 0) + "关注"
-        followedNum.text = String.init(user.follower_count ?? 0) + "粉丝"
+        likeNum.text = String.init(user.total_favorited ?? 0) + " 获赞"
+        followNum.text = String.init(user.following_count ?? 0) + " 关注"
+        followedNum.text = String.init(user.follower_count ?? 0) + " 粉丝"
+    }
+    
+    func overScrollAction(offsetY: CGFloat) {
+        let scaleRatio: CGFloat = abs(offsetY) / 370.0
+        let overScaleHeight: CGFloat = (370.0 * scaleRatio) / 2.0
+        avatarBackground.transform = CGAffineTransform.init(scaleX: scaleRatio + 1.0,
+                                                            y: scaleRatio + 1.0)
+            .concatenating(CGAffineTransform.init(translationX: 0,
+                                                  y: -overScaleHeight))
+    }
+    
+    func scrollToTopAction(offsetY: CGFloat) {
+        let alphaRatio = offsetY / (370.0 - 44.0 - statusBarHeight)
+        container.alpha = 1.0 - alphaRatio
+        naviContainer.alpha = alphaRatio - 0.5
     }
     
 }

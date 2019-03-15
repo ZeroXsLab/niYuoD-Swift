@@ -22,6 +22,8 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     
     var itemWidth: CGFloat = 0
     var itemHeight: CGFloat = 0
+    
+    var userInfooHeader: UserInfoHeader?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +32,11 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         let layout = HoverViewFlowLayout.init(naviHeight: safeAreaTopHeight)
         collectionView = UICollectionView.init(frame: UIScreen.main.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = UIColor.white
-        collectionView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
         collectionView.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -96,6 +102,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: kHeaderId,
                                                                              for: indexPath) as! UserInfoHeader
+                userInfooHeader = header
                 if let data = user {
                     header.initData(user: data)
                 }
@@ -177,6 +184,15 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
             break
         default:
             break
+        }
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        if offsetY < 0 {
+            userInfooHeader?.overScrollAction(offsetY: offsetY)
+        } else {
+            userInfooHeader?.scrollToTopAction(offsetY: offsetY)
         }
     }
 
