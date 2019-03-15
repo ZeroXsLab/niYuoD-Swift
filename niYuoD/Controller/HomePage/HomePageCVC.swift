@@ -24,6 +24,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     var itemHeight: CGFloat = 0
     
     var userInfooHeader: UserInfoHeader?
+    var loadMore: LoadMoreControl?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         itemHeight = itemWidth * 1.3
         let layout = HoverViewFlowLayout.init(naviHeight: safeAreaTopHeight)
         collectionView = UICollectionView.init(frame: UIScreen.main.bounds, collectionViewLayout: layout)
-        collectionView.backgroundColor = UIColor.white
+        collectionView.backgroundColor = UIColor.clear
         if #available(iOS 11.0, *) {
             collectionView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         } else {
@@ -46,20 +47,20 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         collectionView.register(UserInfoHeader.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: kHeaderId)
         collectionView.register(TabBarFooter.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: kFooterId)
         self.view.addSubview(collectionView)
+        loadMore = LoadMoreControl.init(frame: CGRect.init(x: 0, y: 380 + statusBarHeight, width: screenWidth, height: 50), surplusCount: 15)
+        loadMore?.startLoading()
+        loadMore?.onLoad = {[weak self] in
+            self?.loadData(page: self?.pageIndex ?? 0)
+        }
+        collectionView.addSubview(loadMore!)
         loadUserData()
         loadData(page: self.pageIndex)
         // Do any additional setup after loading the view.
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
-    */
 
     // MARK: UICollectionViewDataSource
 
@@ -111,7 +112,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                              withReuseIdentifier: kFooterId,
                                                                              for: indexPath) as! TabBarFooter
-                footer.setLabel(titles: ["作品 " + String(user?.aweme_count ?? 0),"LIKE"], tabIndex: 0)
+                footer.setLabel(titles: ["作品 " + String(user?.aweme_count ?? 0),"LIKE " + String(user?.favoriting_count ?? 0)], tabIndex: 0)
                 view = footer
             }
         default:
@@ -157,6 +158,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                                                 if let response = data as? AwemeListResponse {
                                                     let array = response.data
                                                     self?.pageIndex += 1
+                                                    UIView.setAnimationsEnabled(false)
                                                     self?.collectionView.performBatchUpdates({
                                                         self?.workAwemes += array
                                                         var indexPaths = [IndexPath]()
@@ -164,10 +166,17 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                                                             indexPaths.append(IndexPath.init(row: row, section: 1))
                                                         }
                                                         self?.collectionView.insertItems(at: indexPaths)
-                                                    }, completion: nil)
+                                                    }, completion: {finished in
+                                                        UIView.setAnimationsEnabled(true)
+                                                        self?.loadMore?.endLoading()
+                                                        if response.has_more == 0 {
+                                                            self?.loadMore?.loadingAll()
+                                                        }
+                                                    })
                                                 }
             },
                                              failure: { error in
+                                                self.loadMore?.loadingFailed()
                                                 print("HomePage load data: " + error.localizedDescription)
         })
     }
@@ -195,36 +204,5 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
             userInfooHeader?.scrollToTopAction(offsetY: offsetY)
         }
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
 
 }
