@@ -21,6 +21,7 @@ let screenHeight = UIScreen.main.bounds.height
 let screenFrame = UIScreen.main.bounds
 let statusBarHeight = UIApplication.shared.statusBarFrame.height
 let cellGap: CGFloat = 9.0
+let tabBarHeight: CGFloat = 40
 
 let safeAreaTopHeight: CGFloat = 64
 

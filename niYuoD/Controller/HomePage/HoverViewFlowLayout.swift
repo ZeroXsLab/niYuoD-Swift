@@ -39,27 +39,15 @@ class HoverViewFlowLayout: UICollectionViewFlowLayout {
                                                                    at: IndexPath.init(item: 0, section: 0)){
             superArray.append(header)
         }
-        if let footer = super.layoutAttributesForSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                   at: IndexPath.init(item: 0, section: 0)){
-            superArray.append(footer)
-        }
         for attributes in superArray {
             if attributes.indexPath.section == 0 {
                 if attributes.representedElementKind == UICollectionView.elementKindSectionHeader {
                     var rect = attributes.frame
-                    if (self.collectionView?.contentOffset.y)! + self.naviHeight - rect.size.height > rect.origin.y {
-                        rect.origin.y = (self.collectionView?.contentOffset.y)! + self.naviHeight - rect.size.height
+                    if (self.collectionView?.contentOffset.y)! + self.naviHeight - rect.size.height + tabBarHeight > rect.origin.y {
+                        rect.origin.y = (self.collectionView?.contentOffset.y)! + self.naviHeight - rect.size.height + tabBarHeight
                         attributes.frame = rect
                     }
                     attributes.zIndex = 5
-                }
-                if attributes.representedElementKind == UICollectionView.elementKindSectionFooter {
-                    var rect = attributes.frame
-                    if (self.collectionView?.contentOffset.y)! + self.naviHeight > rect.origin.y {
-                        rect.origin.y = (self.collectionView?.contentOffset.y)! + self.naviHeight
-                        attributes.frame = rect
-                    }
-                    attributes.zIndex = 10
                 }
             }
         }

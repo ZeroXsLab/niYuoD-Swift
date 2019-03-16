@@ -108,15 +108,9 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                 userInfooHeader = header
                 if let data = user {
                     header.initData(user: data)
+                    header.tabBarFooter.delegate = self
                 }
                 view = header
-            } else {
-                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                             withReuseIdentifier: kFooterId,
-                                                                             for: indexPath) as! TabBarFooter
-                footer.delegate = self
-                footer.setLabel(titles: ["作品 " + String(user?.aweme_count ?? 0),"LIKE " + String(user?.favoriting_count ?? 0)], tabIndex: tabIndex)
-                view = footer
             }
         default:
             NSLog("In viewForSupplementaryElementOfKind, with indexPath.section = \(indexPath.section)")
@@ -135,11 +129,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     // UICollectionView FlowLayout Delegate
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 340 + statusBarHeight) : .zero
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 40) : .zero
+        return section == 0 ? CGSize.init(width: UIScreen.main.bounds.width, height: 380 + statusBarHeight) : .zero
     }
     
     func loadUserData() {

@@ -15,7 +15,7 @@ class UserInfoHeader: UICollectionReusableView {
     var constellations = ["射手座","摩羯座","双鱼座","白羊座","水瓶座","金牛座","双子座","巨蟹座","狮子座","处女座","天秤座","天蝎座"]
     var avatar: UIImageView = UIImageView.init(image: UIImage.init(named: "img_find_default"))
     var avatarBackground: UIImageView = UIImageView.init()
-    
+    var blurBackground: UIImageView = UIImageView.init()
     var nickName: UILabel = UILabel.init()
     var douyinNum: UILabel = UILabel.init()
     var brief: UILabel = UILabel.init()
@@ -25,6 +25,7 @@ class UserInfoHeader: UICollectionReusableView {
     var followNum: UILabel = UILabel.init()
     var followedNum: UILabel = UILabel.init()
     
+    var tabBarFooter: TabBarFooter = TabBarFooter.init(frame: CGRect.init(x: 0, y: 0, width: screenWidth, height: tabBarHeight))
     var naviContainer: UIView = UIView.init()
     var naviLabel: UILabel = UILabel.init()
     
@@ -45,31 +46,51 @@ class UserInfoHeader: UICollectionReusableView {
     }
     
     func initAvatarBackground() {
-        avatarBackground.frame = self.bounds
-        avatarBackground.clipsToBounds = true
+        avatarBackground.frame = CGRect.init(x: 0, y: 0, width: screenWidth, height: 50 + safeAreaTopHeight)
         avatarBackground.image = UIImage.init(named: "image_find_default")
-        avatarBackground.backgroundColor = UIColor.gray
         avatarBackground.contentMode = .scaleAspectFill
         self.addSubview(avatarBackground)
+        
+        blurBackground.frame = CGRect.init(x: 0,
+                                           y: 35 + safeAreaTopHeight,
+                                           width: screenWidth,
+                                           height: self.bounds.size.height - (35 + safeAreaTopHeight))
+        blurBackground.backgroundColor = UIColor.clear
+        blurBackground.contentMode = .scaleAspectFill
+        self.addSubview(blurBackground)
         let blurEffect = UIBlurEffect.init(style: UIBlurEffect.Style.dark)
         let visualEffectView = UIVisualEffectView.init(effect: blurEffect)
-        visualEffectView.frame = self.bounds
-        visualEffectView.alpha = 0.75
-        avatarBackground.addSubview(visualEffectView)
+        visualEffectView.frame = blurBackground.bounds
+        visualEffectView.alpha = 1
+        blurBackground.addSubview(visualEffectView)
+        
+        let maskLayer: CAShapeLayer = CAShapeLayer.init()
+        let avatarRadius: CGFloat = 54
+        let topOffset: CGFloat = 16
+        let bezierPath: UIBezierPath = UIBezierPath.init()
+        bezierPath.move(to: CGPoint.init(x: 0, y: topOffset))
+        bezierPath.addLine(to: CGPoint.init(x: 25, y: topOffset))
+        bezierPath.addArc(withCenter: CGPoint.init(x: 25 + avatarRadius * cos(CGFloat.pi / 4),
+                                                   y: avatarRadius * sin(CGFloat.pi / 4) + topOffset),
+                          radius: avatarRadius,
+                          startAngle: (CGFloat.pi * 5) / 4,
+                          endAngle: (CGFloat.pi * 7) / 4,
+                          clockwise: true)
+        bezierPath.addLine(to: CGPoint.init(x: 25 + avatarRadius * cos(CGFloat.pi / 4), y: topOffset))
+        bezierPath.addLine(to: CGPoint.init(x: screenWidth, y: topOffset))
+        bezierPath.addLine(to: CGPoint.init(x: screenWidth, y: self.bounds.size.height - (50 + safeAreaTopHeight) + topOffset - 1))
+        bezierPath.addLine(to: CGPoint.init(x: 0, y: self.bounds.size.height - (50 + safeAreaTopHeight) + topOffset - 1))
+        bezierPath.close()
+        maskLayer.path = bezierPath.cgPath
+        blurBackground.layer.mask = maskLayer
     }
     
     func initAvatar() {
-        let avatarRadius: CGFloat = 45
+        let avatarRadius: CGFloat = 48
         avatar.isUserInteractionEnabled = true
         container.addSubview(avatar)
-        let paddingLayer = CALayer.init()
-        paddingLayer.frame = CGRect.init(x: 0, y: 0, width: avatarRadius * 2, height: avatarRadius * 2)
-        paddingLayer.borderColor = UIColor.white.cgColor
-        paddingLayer.borderWidth = 2
-        paddingLayer.cornerRadius = avatarRadius
-        avatar.layer.addSublayer(paddingLayer)
         avatar.snp.makeConstraints({ make in
-            make.top.equalTo(self).offset( 25 + 44 + statusBarHeight)
+            make.top.equalTo(self).offset( 40 + safeAreaTopHeight)
             make.left.equalTo(self).offset(15)
             make.width.height.equalTo(avatarRadius * 2)
         })
@@ -92,7 +113,7 @@ class UserInfoHeader: UICollectionReusableView {
         naviLabel.textColor = UIColor.white
         naviContainer.addSubview(naviLabel)
         naviLabel.snp.makeConstraints({ make in
-            make.bottom.equalTo(self).inset(10)
+            make.bottom.equalTo(self).inset(10 + tabBarHeight)
             make.left.right.equalTo(self).inset(15)
         })
         
@@ -176,6 +197,13 @@ class UserInfoHeader: UICollectionReusableView {
             make.top.equalTo(self.likeNum)
             make.left.equalTo(self.followNum.snp.right).offset(30)
         })
+
+        self.addSubview(tabBarFooter)
+        tabBarFooter.snp.makeConstraints({ make in
+            make.height.equalTo(tabBarHeight)
+            make.left.right.bottom.equalTo(self)
+        })
+        tabBarFooter.setLabel(titles: ["作品 0","LIKE 0"], tabIndex: 0)
     }
     
     func initData(user: User) {
@@ -184,6 +212,7 @@ class UserInfoHeader: UICollectionReusableView {
             DispatchQueue.main.async {
                 let avaImage = (UIImage.init(data: urlContents!) ?? UIImage.init(named: "img_find_default"))!
                 self.avatarBackground.image = avaImage
+                self.blurBackground.image = avaImage
                 let side = min(avaImage.size.width, avaImage.size.height)
                 let size = CGSize.init(width: side, height: side)
                 let rect = CGRect.init(origin: CGPoint.zero, size: size)
@@ -209,6 +238,7 @@ class UserInfoHeader: UICollectionReusableView {
         likeNum.text = String.init(user.total_favorited ?? 0) + " 获赞"
         followNum.text = String.init(user.following_count ?? 0) + " 关注"
         followedNum.text = String.init(user.follower_count ?? 0) + " 粉丝"
+        tabBarFooter.setLabel(titles: ["作品 " + String(user.aweme_count ?? 0),"LIKE " + String(user.favoriting_count ?? 0)], tabIndex: 0)
     }
     
     func overScrollAction(offsetY: CGFloat) {
