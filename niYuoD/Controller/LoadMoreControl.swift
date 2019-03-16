@@ -35,6 +35,7 @@ class LoadMoreControl: UIControl {
     var loadingType: LoadingType {
         set {
             _loadingType = newValue
+            label.snp.removeConstraints()
             switch newValue {
             case .LoadStateIdle:
                 self.isHidden = true

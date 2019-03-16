@@ -14,6 +14,7 @@ let NetworkDomain: String = "com.network.niYuoD"
 
 let FindUserByUID_URL: String = "user"
 let FindAwemePostByPageURL: String = "aweme/post"
+let FindAwemeFavoriteByPageURL: String = "aweme/favorite"
 
 let screenWidth = UIScreen.main.bounds.width
 let screenHeight = UIScreen.main.bounds.height

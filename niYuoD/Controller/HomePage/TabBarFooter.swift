@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol OnTabTapActionDelegate: NSObjectProtocol {
+    func onTabTapAction (index: Int)
+}
+
 class TabBarFooter: UICollectionReusableView {
     
-    var tabBarView: UIView = UIView.init()
+    var delegate: OnTabTapActionDelegate?
+    
+    var slideLightView: UIView = UIView.init()
     var labels: [UILabel] = [UILabel]()
     var labelWidth: CGFloat = 0
     
@@ -36,6 +42,9 @@ class TabBarFooter: UICollectionReusableView {
             label.text = title
             label.textColor = UIColor.gray
             label.textAlignment = .center
+            label.tag = index
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(onTapAction(sender:))))
             label.frame = CGRect(x: CGFloat(index) * labelWidth,
                                  y: 0,
                                  width: labelWidth,
@@ -53,11 +62,35 @@ class TabBarFooter: UICollectionReusableView {
             }
         }
         labels[tabIndex].textColor = UIColor.white
-        tabBarView = UIView.init(frame: CGRect(x: CGFloat(tabIndex) * labelWidth,
+        slideLightView = UIView.init(frame: CGRect(x: CGFloat(tabIndex) * labelWidth + 15,
                                                y: self.bounds.size.height - 2,
                                                width: labelWidth - 30,
                                                height: 2))
-        self.addSubview(tabBarView)
+        slideLightView.backgroundColor = UIColor.yellow
+        self.addSubview(slideLightView)
+    }
+    
+    @objc func onTapAction(sender: UITapGestureRecognizer) {
+        let index: Int = sender.view?.tag ?? 0
+        if delegate != nil {
+            UIView.animate(withDuration: 0.1,
+                           delay: 0.0,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.0,
+                           options: .curveEaseInOut,
+                           animations: {
+                            var frame = self.slideLightView.frame
+                            frame.origin.x = self.labelWidth * CGFloat(index) + 15
+                            self.slideLightView.frame = frame
+                            for idx in 0 ..< self.labels.count {
+                                let label = self.labels[idx]
+                                label.textColor = (index == idx ? UIColor.white : UIColor.gray)
+                            }
+            },
+                           completion: { finished in
+                            self.delegate?.onTabTapAction(index: index)
+            })
+        }
     }
     
 }

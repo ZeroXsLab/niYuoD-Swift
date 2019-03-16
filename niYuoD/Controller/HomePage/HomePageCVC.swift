@@ -12,13 +12,15 @@ private let kAwemeCollectionCell = "AwemeCollectionCell"
 let kHeaderId = "UserInfoHeader"
 let kFooterId = "UserInfoFooter"
 
-class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout {
+class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout, OnTabTapActionDelegate {
     
     let uid: String = "97795069353"
     var user: User?
     var pageIndex: Int = 0
     var pageSize: Int = 21
     var workAwemes = [Aweme]()
+    var favoriteAwemes = [Aweme]()
+    var tabIndex = 0
     
     var itemWidth: CGFloat = 0
     var itemHeight: CGFloat = 0
@@ -76,7 +78,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
         case 0:
             return 0
         case 1:
-            return workAwemes.count
+            return tabIndex == 0 ? workAwemes.count : favoriteAwemes.count
         default:
             return 0
         }
@@ -84,7 +86,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kAwemeCollectionCell, for: indexPath) as! AwemeCollectionViewCell
-        let aweme: Aweme = workAwemes[indexPath.row]
+        let aweme: Aweme = (tabIndex == 0 ? workAwemes[indexPath.row] : favoriteAwemes[indexPath.row])
         cell.initData(aweme: aweme)
         return cell
     }
@@ -112,7 +114,8 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                                              withReuseIdentifier: kFooterId,
                                                                              for: indexPath) as! TabBarFooter
-                footer.setLabel(titles: ["作品 " + String(user?.aweme_count ?? 0),"LIKE " + String(user?.favoriting_count ?? 0)], tabIndex: 0)
+                footer.delegate = self
+                footer.setLabel(titles: ["作品 " + String(user?.aweme_count ?? 0),"LIKE " + String(user?.favoriting_count ?? 0)], tabIndex: tabIndex)
                 view = footer
             }
         default:
@@ -122,7 +125,7 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     }
     // UICollectionView Action
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let controller = AwemeListTVC.init(data: workAwemes, currentIndex: indexPath.row, page: pageIndex, size: pageSize, uid: uid)
+        let controller = AwemeListTVC.init(data: (tabIndex == 0 ? workAwemes : favoriteAwemes), currentIndex: indexPath.row, page: pageIndex, size: pageSize, uid: uid)
         let edgePanRecognizer: UIScreenEdgePanGestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgePanHandler(recognizer:)))
         edgePanRecognizer.edges = .left
         controller.view.addGestureRecognizer(edgePanRecognizer)
@@ -152,33 +155,68 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
     }
     
     func loadData(page: Int, _ size: Int = 21) {
-        AwemeListRequest.findPostAwemesPaged(uid: uid,
-                                             page: page,
-                                             success: {[weak self] data in
-                                                if let response = data as? AwemeListResponse {
-                                                    let array = response.data
-                                                    self?.pageIndex += 1
-                                                    UIView.setAnimationsEnabled(false)
-                                                    self?.collectionView.performBatchUpdates({
-                                                        self?.workAwemes += array
-                                                        var indexPaths = [IndexPath]()
-                                                        for row in ((self?.workAwemes.count ?? 0) - array.count) ..< (self?.workAwemes.count ?? 0) {
-                                                            indexPaths.append(IndexPath.init(row: row, section: 1))
+        if tabIndex == 0 {
+            AwemeListRequest.findPostAwemesPaged(uid: uid,
+                                                 page: page,
+                                                 success: {[weak self] data in
+                                                    if let response = data as? AwemeListResponse {
+                                                        if self?.tabIndex != 0 {
+                                                            return
                                                         }
-                                                        self?.collectionView.insertItems(at: indexPaths)
-                                                    }, completion: {finished in
-                                                        UIView.setAnimationsEnabled(true)
-                                                        self?.loadMore?.endLoading()
-                                                        if response.has_more == 0 {
-                                                            self?.loadMore?.loadingAll()
+                                                        let array = response.data
+                                                        self?.pageIndex += 1
+                                                        UIView.setAnimationsEnabled(false)
+                                                        self?.collectionView.performBatchUpdates({
+                                                            self?.workAwemes += array
+                                                            var indexPaths = [IndexPath]()
+                                                            for row in ((self?.workAwemes.count ?? 0) - array.count) ..< (self?.workAwemes.count ?? 0) {
+                                                                indexPaths.append(IndexPath.init(row: row, section: 1))
+                                                            }
+                                                            self?.collectionView.insertItems(at: indexPaths)
+                                                        }, completion: {finished in
+                                                            UIView.setAnimationsEnabled(true)
+                                                            self?.loadMore?.endLoading()
+                                                            if response.has_more == 0 {
+                                                                self?.loadMore?.loadingAll()
+                                                            }
+                                                        })
+                                                    }
+                },
+                                                 failure: { error in
+                                                    self.loadMore?.loadingFailed()
+                                                    print("HomePage load data: " + error.localizedDescription)
+            })
+        } else {
+            AwemeListRequest.findFavoriteAwemesPaged(uid: uid,
+                                                     page: page,
+                                                     success: {[weak self] data in
+                                                        if let response = data as? AwemeListResponse {
+                                                            if self?.tabIndex != 1 {
+                                                                return
+                                                            }
+                                                            let array = response.data
+                                                            self?.pageIndex += 1
+                                                            UIView.setAnimationsEnabled(false)
+                                                            self?.collectionView.performBatchUpdates({
+                                                                self?.favoriteAwemes += array
+                                                                var indexPaths = [IndexPath]()
+                                                                for row in ((self?.favoriteAwemes.count ?? 0) - array.count) ..< (self?.favoriteAwemes.count ?? 0) {
+                                                                    indexPaths.append(IndexPath.init(row: row, section: 1))
+                                                                }
+                                                                self?.collectionView.insertItems(at: indexPaths)
+                                                            },completion: { finished in
+                                                                UIView.setAnimationsEnabled(true)
+                                                                self?.loadMore?.endLoading()
+                                                                if response.has_more == 0 {
+                                                                    self?.loadMore?.loadingAll()
+                                                                }
+                                                            })
                                                         }
-                                                    })
-                                                }
-            },
-                                             failure: { error in
-                                                self.loadMore?.loadingFailed()
-                                                print("HomePage load data: " + error.localizedDescription)
-        })
+                },
+                                                     failure: { error in
+                                                        self.loadMore?.loadingFailed()
+            })
+        }
     }
 
     @objc func edgePanHandler(recognizer: UIScreenEdgePanGestureRecognizer){
@@ -193,6 +231,25 @@ class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout
             break
         default:
             break
+        }
+    }
+    
+    func onTabTapAction(index: Int){
+        if tabIndex != index {
+            tabIndex = index
+            pageIndex = 0
+            
+            UIView.setAnimationsEnabled(false)
+            collectionView.performBatchUpdates({
+                workAwemes.removeAll()
+                favoriteAwemes.removeAll()
+                collectionView.reloadSections(IndexSet.init(integer: 1))
+            }, completion: { finished in
+                UIView.setAnimationsEnabled(true)
+                self.loadMore?.reset()
+                self.loadMore?.startLoading()
+                self.loadData(page: self.pageIndex)
+            })
         }
     }
     
