@@ -12,6 +12,7 @@ import MobileCoreServices
 
 protocol AVPlayerUpdateDelegate: NSObjectProtocol {
     func onPlayItemStatusUpdate(status: AVPlayerItem.Status)
+    func onProgressUpdate(current: CGFloat, total: CGFloat)
 }
 
 class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, URLSessionDataDelegate, URLSessionTaskDelegate {
@@ -30,6 +31,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     var cancelLoadingQueue: DispatchQueue?
     var hasRetry: Bool = false
     var delegate: AVPlayerUpdateDelegate?
+    var timeObserver: Any?
 
     init() {
         super.init(frame: screenFrame)
@@ -50,6 +52,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         playerLayer = AVPlayerLayer.init(player: player)
         playerLayer.videoGravity = .resizeAspectFill
         self.layer.addSublayer(self.playerLayer)
+        addProgressObserver()
         cancelLoadingQueue = DispatchQueue.init(label: "com.start.cancelloadingqueue")
     }
     
@@ -80,6 +83,7 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
                     self?.playerItem?.addObserver(self!, forKeyPath: "status", options: [.initial, .new], context: nil)
                     self?.player = AVPlayer.init(playerItem: self?.playerItem)
                     self?.playerLayer.player = self?.player
+                    self?.addProgressObserver()
                 }
             }
         }
@@ -91,6 +95,9 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         playerLayer.isHidden = true
         CATransaction.commit()
         playerItem?.removeObserver(self, forKeyPath: "status")
+        if let observer = timeObserver {
+            player?.removeTimeObserver(observer)
+        }
         pause()
         player = nil
         playerItem = nil
@@ -108,6 +115,10 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
             }
             self?.pendingRequests.removeAll()
         }
+    }
+    
+    func rate() -> CGFloat {
+        return CGFloat.init(player?.rate ?? 0)
     }
     
     func play() {
@@ -132,6 +143,9 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
     
     deinit {
         playerItem?.removeObserver(self, forKeyPath: "status")
+        if let observer = timeObserver {
+            player?.removeTimeObserver(observer)
+        }
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
@@ -220,6 +234,19 @@ class AVPlayerView: UIView, URLSessionDelegate, AVAssetResourceLoaderDelegate, U
         if let index = pendingRequests.firstIndex(of: loadingRequest) {
             pendingRequests.remove(at: index)
         }
+    }
+    
+    func addProgressObserver(){
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1),
+                                                       queue: DispatchQueue.main,
+                                                       using: {[weak self] time in
+                                                        let current = CMTimeGetSeconds(time)
+                                                        let total = CMTimeGetSeconds(self?.playerItem?.duration ?? CMTime.init())
+                                                        if total == current {
+                                                            self?.replay()
+                                                        }
+                                                        self?.delegate?.onProgressUpdate(current: CGFloat.init(current), total: CGFloat.init(total))
+        })
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

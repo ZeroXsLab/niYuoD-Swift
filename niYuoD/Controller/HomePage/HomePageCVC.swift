@@ -15,7 +15,13 @@ let kFooterId = "UserInfoFooter"
 class HomePageCVC: UICollectionViewController,UICollectionViewDelegateFlowLayout, OnTabTapActionDelegate {
     
     let uid: String = "97795069353"
-    var user: User?
+    var user: User? {
+        didSet {
+            user?.nickname = "Xs Wong"
+            user?.gender = 0
+            user?.constellation = 5
+        }
+    }
     var pageIndex: Int = 0
     var pageSize: Int = 21
     var workAwemes = [Aweme]()

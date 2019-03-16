@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8272F76C223D70910060C23F /* CircleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8272F76B223D70910060C23F /* CircleTextView.swift */; };
+		8272F76E223D78B50060C23F /* MusicAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8272F76D223D78B50060C23F /* MusicAlbumView.swift */; };
+		8272F770223D83400060C23F /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8272F76F223D83400060C23F /* FocusView.swift */; };
 		82881E062226E72400E42309 /* AwemeListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82881E052226E72400E42309 /* AwemeListCell.swift */; };
 		8289753F222A6E9000A17343 /* AVPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8289753E222A6E9000A17343 /* AVPlayerManager.swift */; };
 		82897541222A770C00A17343 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82897540222A770C00A17343 /* AVPlayerView.swift */; };
@@ -43,6 +46,9 @@
 		28FD60CEB0B29790542DDF31 /* Pods-niYuoD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.release.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.release.xcconfig"; sourceTree = "<group>"; };
 		40624A6A381F6DBA983A69F0 /* Pods_niYuoD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_niYuoD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55183609D928B990F605F835 /* Pods-niYuoD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.debug.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.debug.xcconfig"; sourceTree = "<group>"; };
+		8272F76B223D70910060C23F /* CircleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTextView.swift; sourceTree = "<group>"; };
+		8272F76D223D78B50060C23F /* MusicAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAlbumView.swift; sourceTree = "<group>"; };
+		8272F76F223D83400060C23F /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
 		82881E052226E72400E42309 /* AwemeListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwemeListCell.swift; sourceTree = "<group>"; };
 		8289753E222A6E9000A17343 /* AVPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerManager.swift; sourceTree = "<group>"; };
 		82897540222A770C00A17343 /* AVPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerView.swift; sourceTree = "<group>"; };
@@ -107,6 +113,9 @@
 				82881E052226E72400E42309 /* AwemeListCell.swift */,
 				8289753E222A6E9000A17343 /* AVPlayerManager.swift */,
 				82897540222A770C00A17343 /* AVPlayerView.swift */,
+				8272F76B223D70910060C23F /* CircleTextView.swift */,
+				8272F76D223D78B50060C23F /* MusicAlbumView.swift */,
+				8272F76F223D83400060C23F /* FocusView.swift */,
 			);
 			path = AwemeList;
 			sourceTree = "<group>";
@@ -159,8 +168,8 @@
 		82EBECAE22252F7600DB92CD /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				82AA974F222683E0008D1A55 /* AwemeList */,
 				82AA974E222683C5008D1A55 /* HomePage */,
+				82AA974F222683E0008D1A55 /* AwemeList */,
 				82A351B2223BBB00006DED8C /* LoadMoreControl.swift */,
 			);
 			path = Controller;
@@ -353,7 +362,10 @@
 				828B3BA0221B299500FFC253 /* UserRequest.swift in Sources */,
 				82881E062226E72400E42309 /* AwemeListCell.swift in Sources */,
 				82BAF1ED22148720002C343F /* HomePageCVC.swift in Sources */,
+				8272F770223D83400060C23F /* FocusView.swift in Sources */,
 				828B3B9C221B15C000FFC253 /* BaseRequest.swift in Sources */,
+				8272F76E223D78B50060C23F /* MusicAlbumView.swift in Sources */,
+				8272F76C223D70910060C23F /* CircleTextView.swift in Sources */,
 				82A351B3223BBB00006DED8C /* LoadMoreControl.swift in Sources */,
 				82AA975122268423008D1A55 /* AwemeListTVC.swift in Sources */,
 				82EBECBB222557EB00DB92CD /* BaseResponse.swift in Sources */,

@@ -113,7 +113,7 @@ class UserInfoHeader: UICollectionReusableView {
         naviLabel.textColor = UIColor.white
         naviContainer.addSubview(naviLabel)
         naviLabel.snp.makeConstraints({ make in
-            make.bottom.equalTo(self).inset(10 + tabBarHeight)
+            make.bottom.equalTo(self).inset(tabBarHeight)
             make.left.right.equalTo(self).inset(15)
         })
         

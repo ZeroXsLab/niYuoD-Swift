@@ -29,6 +29,8 @@ class AwemeListTVC: UITableViewController {
         self.uid = uid
         self.awemes = data
         self.data.append(data[currentIndex])
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationBecomeActive), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -73,6 +75,7 @@ class AwemeListTVC: UITableViewController {
         for cell in cells {
             cell.playerView.cancelLoading()
         }
+        NotificationCenter.default.removeObserver(self)
         self.removeObserver(self, forKeyPath: "currentIndex")
     }
 
@@ -165,49 +168,20 @@ class AwemeListTVC: UITableViewController {
         }
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    @objc func applicationBecomeActive() {
+        if tableView != nil {
+            let cell = tableView.cellForRow(at: IndexPath.init(row: currentIndex, section: 0)) as! AwemeListCell
+            if !isCurPlayerPause {
+                cell.playerView.play()
+            }
+        }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    @objc func applicationEnterBackground() {
+        if tableView != nil {
+            let cell = self.tableView.cellForRow(at: IndexPath.init(row: currentIndex, section: 0)) as! AwemeListCell
+            isCurPlayerPause = cell.playerView.rate() == 0 ? true : false
+            cell.playerView.pause()
+        }
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
