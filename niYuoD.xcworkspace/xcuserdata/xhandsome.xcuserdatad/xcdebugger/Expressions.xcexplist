@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "AwemeListCell.initData(aweme:):AwemeListCell.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AVPlayerManager.play(player:):AVPlayerManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AVPlayerView.setPlayerSourceUrl(urlString:):AVPlayerView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "components?.url">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in AwemeListTVC.viewDidLoad():AwemeListTVC.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.tableView.numberOfRows(inSection: 0)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AwemeListTVC.viewDidLoad():AwemeListTVC.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AVPlayerView.resourceLoader(_:shouldWaitForLoadingOfRequestedResource:):AVPlayerView.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AwemeListTVC.init(indexPath:):AwemeListTVC.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AwemeListTVC.tableView(_:cellForRowAt:):AwemeListTVC.swift">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
