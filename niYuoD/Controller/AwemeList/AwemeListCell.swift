@@ -24,6 +24,8 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
     var avatar: UIImageView = UIImageView.init(image: UIImage.init(named: "img_find_default"))
     var focus = FocusView.init()
     var musicAlbum: MusicAlbumView = MusicAlbumView.init()
+    var like: LikeView = LikeView.init()
+    var likeNum: UILabel = UILabel.init()
     var comment: UIImageView = UIImageView.init(image: UIImage.init(named: "icon_home_comment"))
     var commentNum: UILabel = UILabel.init()
     var share: UIImageView = UIImageView.init(image: UIImage.init(named: "icon_home_share"))
@@ -92,6 +94,13 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
         container.addSubview(focus)
         
         container.addSubview(musicAlbum)
+        
+        container.addSubview(like)
+        
+        likeNum.textColor = UIColor.white
+        likeNum.font = midFont
+        likeNum.text = "2"
+        container.addSubview(likeNum)
         
         comment.contentMode = .center
         container.addSubview(comment)
@@ -164,6 +173,16 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
             make.top.equalTo(self.comment.snp.bottom)
             make.centerX.equalTo(self.comment)
         })
+        like.snp.makeConstraints({ make in
+            make.bottom.equalTo(self.comment.snp.top).offset(-25)
+            make.right.equalTo(self).inset(10)
+            make.width.equalTo(50)
+            make.height.equalTo(45)
+        })
+        likeNum.snp.makeConstraints({ make in
+            make.top.equalTo(self.like.snp.bottom)
+            make.centerX.equalTo(self.like)
+        })
         let avatarRadius: CGFloat = 25
         avatar.snp.makeConstraints({ make in
             make.bottom.equalTo(self.comment.snp.top).offset(-105)
@@ -185,6 +204,7 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
         musicName.text = (aweme.music?.title ?? "") + "-" + (aweme.music?.author ?? "")
         commentNum.text = String.formatCount(count: aweme.statistics?.comment_count ?? 0)
         shareNum.text = String.formatCount(count: aweme.statistics?.share_count ?? 0)
+        likeNum.text = String.formatCount(count: aweme.statistics?.digg_count ?? 0)
         DispatchQueue.global(qos: .userInitiated).async {
             let urlContents = try? Data(contentsOf: URL.init(string: aweme.music?.cover_thumb?.url_list.first ?? "")!)
             DispatchQueue.main.async {
@@ -232,6 +252,7 @@ class AwemeListCell: UITableViewCell, AVPlayerUpdateDelegate {
         avatar.image = UIImage.init(named: "img_find_default")
         musicAlbum.resetView()
         focus.resetView()
+        like.resetView()
     }
     
     func play() {

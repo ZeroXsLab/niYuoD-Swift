@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8220C012223E313700C88830 /* LikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8220C011223E313700C88830 /* LikeView.swift */; };
 		8272F76C223D70910060C23F /* CircleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8272F76B223D70910060C23F /* CircleTextView.swift */; };
 		8272F76E223D78B50060C23F /* MusicAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8272F76D223D78B50060C23F /* MusicAlbumView.swift */; };
 		8272F770223D83400060C23F /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8272F76F223D83400060C23F /* FocusView.swift */; };
@@ -46,6 +47,7 @@
 		28FD60CEB0B29790542DDF31 /* Pods-niYuoD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.release.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.release.xcconfig"; sourceTree = "<group>"; };
 		40624A6A381F6DBA983A69F0 /* Pods_niYuoD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_niYuoD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55183609D928B990F605F835 /* Pods-niYuoD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-niYuoD.debug.xcconfig"; path = "Pods/Target Support Files/Pods-niYuoD/Pods-niYuoD.debug.xcconfig"; sourceTree = "<group>"; };
+		8220C011223E313700C88830 /* LikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeView.swift; sourceTree = "<group>"; };
 		8272F76B223D70910060C23F /* CircleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTextView.swift; sourceTree = "<group>"; };
 		8272F76D223D78B50060C23F /* MusicAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAlbumView.swift; sourceTree = "<group>"; };
 		8272F76F223D83400060C23F /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				8272F76B223D70910060C23F /* CircleTextView.swift */,
 				8272F76D223D78B50060C23F /* MusicAlbumView.swift */,
 				8272F76F223D83400060C23F /* FocusView.swift */,
+				8220C011223E313700C88830 /* LikeView.swift */,
 			);
 			path = AwemeList;
 			sourceTree = "<group>";
@@ -367,6 +370,7 @@
 				8272F76E223D78B50060C23F /* MusicAlbumView.swift in Sources */,
 				8272F76C223D70910060C23F /* CircleTextView.swift in Sources */,
 				82A351B3223BBB00006DED8C /* LoadMoreControl.swift in Sources */,
+				8220C012223E313700C88830 /* LikeView.swift in Sources */,
 				82AA975122268423008D1A55 /* AwemeListTVC.swift in Sources */,
 				82EBECBB222557EB00DB92CD /* BaseResponse.swift in Sources */,
 				82EBECAD22252C1100DB92CD /* BaseModel.swift in Sources */,
